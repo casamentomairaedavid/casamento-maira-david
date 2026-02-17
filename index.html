@@ -318,14 +318,22 @@ Confirmar Presença
 var dataCasamento = new Date("2026-02-18T18:00:00-03:00").getTime();
 
 setInterval(function() {
-var now = new Date().getTime();
-var distance = dataCasamento - now;
-if (distance < 0) return;
+  var now = new Date().getTime();
+  var distance = dataCasamento - now;
+  if (distance < 0) return;
 
-document.getElementById("dias").innerHTML = String(Math.floor(distance / (1000*60*60*24))).padStart(2,'0');
-document.getElementById("horas").innerHTML = String(Math.floor((distance%(1000*60*60*24))/(1000*60*60))).padStart(2,'0');
-document.getElementById("minutos").innerHTML = String(Math.floor((distance%(1000*60*60))/(1000*60))).padStart(2,'0');
-document.getElementById("segundos").innerHTML = String(Math.floor((distance%(1000*60))/1000)).padStart(2,'0');
+  // Calcula dias, horas, minutos, segundos
+  var totalSegundos = Math.floor(distance / 1000);
+
+  var dias = Math.floor(totalSegundos / (3600*24));
+  var horas = Math.floor((totalSegundos % (3600*24)) / 3600);
+  var minutos = Math.floor((totalSegundos % 3600) / 60);
+  var segundos = totalSegundos % 60;
+
+  document.getElementById("dias").innerHTML = String(dias).padStart(2,'0');
+  document.getElementById("horas").innerHTML = String(horas).padStart(2,'0');
+  document.getElementById("minutos").innerHTML = String(minutos).padStart(2,'0');
+  document.getElementById("segundos").innerHTML = String(segundos).padStart(2,'0');
 }, 1000);
 
 const form = document.getElementById("formConfirmacao");
@@ -348,6 +356,7 @@ alert("Erro ao enviar. Tente novamente.");
 
 </body>
 </html>
+
 
 
 
