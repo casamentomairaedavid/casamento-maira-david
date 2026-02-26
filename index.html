@@ -100,7 +100,7 @@ h2{font-size:40px;margin-bottom:25px;}
 
 /* PRESENTES */
 .presentes-section{
-  padding:80px 20px;
+  padding:120px 20px;
   background:url('fundo-presentes.png') center center no-repeat;
   background-size:cover;
   display:flex;
@@ -110,35 +110,23 @@ h2{font-size:40px;margin-bottom:25px;}
 
 .icones-container{
   display:flex;
-  gap:70px;
+  gap:60px;
   flex-wrap:wrap;
   justify-content:center;
   text-align:center;
 }
 
-.icone-item a{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-decoration:none !important;
-  color:#6c212f;
-  transition:0.3s;
-}
-
-.icone-item a:hover{
-  transform:scale(1.08);
-}
-
-.icone-item img{
-  width:110px;
-  margin-bottom:4px;
-}
-
 .icone-item p{
-  font-size:26px;
+  margin-top:5px; /* aproxima do ícone */
+  font-size:32px;
   font-family:'Alex Brush', cursive;
-  margin-top:0;
-}
+  color:#6c212f;
+} 
+
+.icone-item img{width:110px;}
+.icone-item p{margin-top:12px;font-size:20px;}
+.icone-item a:hover{transform:scale(1.08);text-decoration: none;
+  color: inherit;}
 
 /* CONFIRMAÇÃO */
 .confirmacao-section{
@@ -193,3 +181,143 @@ h2{font-size:40px;margin-bottom:25px;}
 #mensagemSucesso{display:none;margin-top:20px;font-size:20px;}
 </style>
 </head>
+
+<body>
+
+<div class="capa"></div>
+
+<div class="data-section">
+<h1>24 de Outubro de 2026 • 20:30</h1>
+
+<button onclick="document.getElementById('confirmar').scrollIntoView({behavior:'smooth'})">
+Confirmar Presença
+</button>
+
+<div class="countdown">
+<div class="box"><span id="dias">00</span><p>Dias</p></div>
+<div class="box"><span id="horas">00</span><p>Horas</p></div>
+<div class="box"><span id="minutos">00</span><p>Min</p></div>
+<div class="box"><span id="segundos">00</span><p>Seg</p></div>
+</div>
+</div>
+
+<div class="section terracota">
+<h2>Cerimônia</h2>
+<p>Paróquia Nossa Senhora da Saúde</p>
+<img src="igreja.png" class="local-img">
+<p>Praça Dr. Lund, 160 - Centro, Lagoa Santa</p>
+<a href="https://maps.app.goo.gl/Sq4iRHocffzSESVX7" target="_blank">
+<button>Ver no Maps</button>
+</a>
+</div>
+
+<div class="section bege">
+<h2>Recepção</h2>
+<p>Sítio do Vovô Ramos</p>
+<img src="recepção.png" class="local-img">
+<p>Estr. João Bruzaferro, 285 - Vale Verde Ville, Lagoa Santa</p>
+<a href="https://maps.app.goo.gl/RyfcRfCeGRJLxU2m7" target="_blank">
+<button>Ver no Maps</button>
+</a>
+</div>
+
+<div class="presentes-section">
+<div class="icones-container">
+
+<div class="icone-item">
+<a href="https://noivos.casar.com/maira-e-david" target="_blank">
+<img src="icone-presente.png">
+  <p>Lista de presentes</p>
+
+</a>
+</div>
+
+<div class="icone-item">
+<a href="LINK_MANUAL" target="_blank">
+<img src="icone-manual.png">
+ <p>Manual dos convidados</p>
+</a>
+</div>
+
+</div>
+</div>
+
+<div class="confirmacao-section" id="confirmar">
+<h2>Confirme sua presença</h2>
+
+<form id="formConfirmacao" action="https://formsubmit.co/casamentomairaedavid@gmail.com" method="POST">
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_subject" value="Nova confirmação de presença!">
+
+<div class="form-box">
+<input type="text" name="Nome" placeholder="Seu nome completo" required>
+<input type="number" name="Quantidade de pessoas" placeholder="Quantidade de pessoas" required>
+<button type="submit">Confirmar Presença</button>
+</div>
+</form>
+
+<p id="mensagemSucesso">✨ Confirmação enviada com sucesso! ✨</p>
+</div>
+
+<script>
+// TIMESTAMP FIXO (igual Casei) - 24/10/2026 20:30 Brasil
+const dataCasamento = 1792884600000;
+
+function atualizarCountdown(){
+  const agora = new Date().getTime();
+  const distancia = dataCasamento - agora;
+
+  if (distancia <= 0){
+    document.getElementById("dias").innerHTML = "00";
+    document.getElementById("horas").innerHTML = "00";
+    document.getElementById("minutos").innerHTML = "00";
+    document.getElementById("segundos").innerHTML = "00";
+    return;
+  }
+
+  let dias = Math.floor(distancia / (1000*60*60*24));
+const restoHoras = (distancia % (1000*60*60*24));
+
+if (restoHoras > 0) {
+  dias = dias - 1;
+}
+  const horas = Math.floor((distancia / (1000*60*60)) % 24);
+  const minutos = Math.floor((distancia / (1000*60)) % 60);
+  const segundos = Math.floor((distancia / 1000) % 60);
+
+  document.getElementById("dias").innerHTML = String(dias).padStart(2,'0');
+  document.getElementById("horas").innerHTML = String(horas).padStart(2,'0');
+  document.getElementById("minutos").innerHTML = String(minutos).padStart(2,'0');
+  document.getElementById("segundos").innerHTML = String(segundos).padStart(2,'0');
+}
+
+setInterval(atualizarCountdown, 1000);
+atualizarCountdown();
+
+// FORM
+const form = document.getElementById("formConfirmacao");
+const mensagem = document.getElementById("mensagemSucesso");
+
+form.addEventListener("submit", function(e){
+e.preventDefault();
+
+fetch(form.action,{
+method:"POST",
+body:new FormData(form)
+}).then(()=>{
+form.reset();
+mensagem.style.display="block";
+}).catch(()=>{
+alert("Erro ao enviar. Tente novamente.");
+});
+});
+</script>
+
+</body>
+
+</html>
+
+
+
+
+
